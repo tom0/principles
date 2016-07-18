@@ -101,6 +101,12 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("singletonSet(1) does not contain 2") {
+    new TestSets {
+      assert(!contains(s1, 2), "Singleton")
+    }
+  }
+
   test("union contains all elements of each set") {
     new TestSets {
       val s = union(s1, s2)
@@ -110,5 +116,60 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect contains elements that are in both sets") {
+    new TestSets {
+      val s4 = union(s1, s2)
+      val s5 = intersect(s4, s1)
+      assert(contains(s5, 1))
+      assert(!contains(s5, 2))
+    }
+  }
+
+  test("diff contains elements that are in set 1 that are not in set 2") {
+    new TestSets {
+      val s4 = union(s1, s2)
+      val s5 = diff(s4, s1)
+      assert(contains(s5, 2))
+      assert(!contains(s5, 1))
+    }
+  }
+
+  test("filter is the same as intersect") {
+    new TestSets {
+      val s4 = union(s1, s2)
+      val s5 = intersect(s4, s1)
+      assert(contains(s5, 1))
+      assert(!contains(s5, 2))
+    }
+  }
+
+  test("forall checks if all elements in set match predicate") {
+    new TestSets {
+      val s4 = union(union(s1, s2), s3)
+
+      assert(forall(s4, _ < 4))
+      assert(!forall(s4, _ < 3))
+    }
+  }
+
+  test("exists checks if at least one element in a set matches a predicate") {
+    new TestSets {
+      val s4 = union(union(s1, s2), s3)
+
+      assert(exists(s4, _ == 2))
+      assert(!exists(s4, _ == 4))
+    }
+  }
+
+  test("map applies function to all members of set") {
+    new TestSets {
+      val s4 = union(union(s1, s2), s3)
+      val s5 = map(s4, _*2)
+
+      assert(contains(s5, 2))
+      assert(contains(s5, 4))
+      assert(contains(s5, 6))
+    }
+  }
 
 }
